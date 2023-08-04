@@ -1,69 +1,51 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <ProjectGuid>{63D9B330-6BD3-40AC-AC97-EDD33ABDCB4E}</ProjectGuid>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <LangVersion>7.3</LangVersion>
-    <AssemblyName>AgileCoding.Library.Types</AssemblyName>
-    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Version>2.0.5</Version>
+    <FileVersion>2.0.5</FileVersion>
+    <AssemblyVersion>2.0.5</AssemblyVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Library to work with types</Title>
+    <Authors>Ernie Gunning</Authors>
+    <Description>Library to work with types</Description>
+    <Copyright>Copyright (c) Ernie Gunning 2023</Copyright>
+    <PackageProjectUrl>https://github.com/ToolMaker/AgileCoding.Library.Types/wiki</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ToolMaker/AgileCoding.Library.Types</RepositoryUrl>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Reflection Types</PackageTags>
+    <PackageReleaseNotes>Moving to core</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>bin\Debug\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>bin\Release\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RootNamespace>AgileCoding.Library.Types</RootNamespace>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="AgileCoding.Extentions.Activators, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AgileCoding.Extentions.Activator.1.0.0.2\lib\net472\AgileCoding.Extentions.Activators.dll</HintPath>
-    </Reference>
-    <Reference Include="AgileCoding.Extentions.Loggers, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AgileCoding.Extentions.Logger.1.0.0.3\lib\net472\AgileCoding.Extentions.Loggers.dll</HintPath>
-    </Reference>
-    <Reference Include="AgileCoding.Library.Enums, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AgileCoding.Library.Enums.1.0.0.1\lib\net472\AgileCoding.Library.Enums.dll</HintPath>
-    </Reference>
-    <Reference Include="AgileCoding.Library.Interfaces, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AgileCoding.Library.Interfaces.1.0.0.1\lib\net472\AgileCoding.Library.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Core">
-      <HintPath>C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Core\v4.0_4.0.0.0__b77a5c561934e089\System.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml" />
+    <PackageReference Include="AgileCoding.Extentions.Activator" Version="2.0.5" />
+    <PackageReference Include="AgileCoding.Library.Interfaces" Version="2.0.6" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="DictionaryOfInstances.cs" />
-    <Compile Include="DictionaryOfTypeBase.cs" />
-    <Compile Include="DictionaryOfTypes.cs" />
-    <Compile Include="DynamicLibrary.cs" />
-    <Compile Include="Exceptions\MoreThanOneException.cs" />
-    <Compile Include="Exceptions\NoConnectionStringDefinedException.cs" />
-    <Compile Include="Exceptions\TypeNotFoundException.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Update="LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

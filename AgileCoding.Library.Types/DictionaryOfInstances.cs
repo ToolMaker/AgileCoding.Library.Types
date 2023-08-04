@@ -56,11 +56,11 @@
             string enumPropertyNameOnInterface,
             Type interfaceImplementingEnumPropertyType,
             List<Type> interfaceTypestoUse,
-            Func<string, object[]> defaultConstFuncGeneratorFunc = null,
+            Func<string, object[]>? defaultConstFuncGeneratorFunc = null,
             params object[] defaultConstructuorsArgs)
         where TEnumKey : struct
         {
-            Dictionary<TEnumKey, TInterfaceType> dictionaryContiantingEnumTypes = null;
+            Dictionary<TEnumKey, TInterfaceType>? dictionaryContiantingEnumTypes = null;
 
             try
             {
@@ -76,14 +76,17 @@
 
                 if (interfaceTypestoUse.Count == 0)
                 {
-                    throw new Exception($"Unable to create a dictionary of type {typeof(TInterfaceType)}. No assemblies referenced contains this type. If you are sure you are referencing the type please make sure the type is used somewhere before the compiler will include it in compile time.");
+                    throw new TypeNotFoundException($"Unable to create a dictionary of type {typeof(TInterfaceType)}. No assemblies referenced contains this type. If you are sure you are referencing the type please make sure the type is used somewhere before the compiler will include it in compile time.");
                 }
 
-                DictionaryOfTypeBase.GenerateDictionaryOfInstances(logger, enumPropertyNameOnInterface, interfaceTypestoUse, defaultConstFuncGeneratorFunc, paramsList, dictionaryContiantingEnumTypes);
+                if (defaultConstFuncGeneratorFunc != null)
+                {
+                    DictionaryOfTypeBase.GenerateDictionaryOfInstances(logger, enumPropertyNameOnInterface, interfaceTypestoUse, defaultConstFuncGeneratorFunc, paramsList, dictionaryContiantingEnumTypes);
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
             return dictionaryContiantingEnumTypes;
         }
@@ -101,11 +104,11 @@
             ILogger logger,
             string enumPropertyNameOnInterface,
             List<Type> interfaceTypestoUse,
-            Func<string, object[]> defaultConstFuncGenerator = null,
+            Func<string, object[]>? defaultConstFuncGenerator = null,
             params object[] defaultConstructuorsArgs)
         where TEnumKey : struct
         {
-            Dictionary<TEnumKey, TInterfaceType> dictionaryContiantingEnumTypes = null;
+            Dictionary<TEnumKey, TInterfaceType>? dictionaryContiantingEnumTypes = null;
 
             try
             {
@@ -120,12 +123,14 @@
                 {
                     throw new TypeNotFoundException($"Unable to create a dictionary of type {typeof(TInterfaceType)}. No assemblies referenced contains this type. If you are sure you are referencing the type please make sure the type is used somewhere before the compiler will include it in compile time.");
                 }
-
-                DictionaryOfTypeBase.GenerateDictionaryOfInstances(logger, enumPropertyNameOnInterface, interfaceTypestoUse, defaultConstFuncGenerator, paramsList, dictionaryContiantingEnumTypes);
+                if (defaultConstFuncGenerator != null)
+                {
+                    DictionaryOfTypeBase.GenerateDictionaryOfInstances(logger, enumPropertyNameOnInterface, interfaceTypestoUse, defaultConstFuncGenerator, paramsList, dictionaryContiantingEnumTypes);
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
             return dictionaryContiantingEnumTypes;
         }

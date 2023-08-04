@@ -13,11 +13,11 @@ namespace AgileCoding.Library.Types
 
             if (includeOrExcludeFilter)
             {
-                return listOfInterfaceTypes.Where(x => namespacesToFiler.Any(y => x.Namespace.StartsWith(y))).ToList();
+                return listOfInterfaceTypes.Where(x => namespacesToFiler.Any(y => x.Namespace != null && x.Namespace.StartsWith(y))).ToList();
             }
             else
             {
-                return listOfInterfaceTypes.Where(x => namespacesToFiler.Any(y => !x.Namespace.StartsWith(y))).ToList();
+                return listOfInterfaceTypes.Where(x => namespacesToFiler.Any(y => x.Namespace != null && !x.Namespace.StartsWith(y))).ToList();
             }
         }
 
@@ -29,7 +29,7 @@ namespace AgileCoding.Library.Types
                 listOfInterfaceTypes
                 .AddRange(assembly
                             .DefinedTypes
-                            .Where((TypeInfo type) => type.ImplementedInterfaces.Any((Type inter) => inter == typeof(TInterfaceType)) &&
+                            .Where((TypeInfo type) => type.Namespace != null && type.ImplementedInterfaces.Any((Type inter) => inter == typeof(TInterfaceType)) &&
                                             !type.IsInterface &&
                                             !type.Namespace.ToLower().EndsWith(".dummy") &&
                                             !type.Name.ToLower().StartsWith("dummy"))
@@ -51,7 +51,7 @@ namespace AgileCoding.Library.Types
                     listOfInterfaceTypes
                     .AddRange(assembly
                                 .DefinedTypes
-                                .Where(type => type.ImplementedInterfaces.Any((Type inter) => inter == typeof(TInterfaceType)) &&
+                                .Where(type => type.Namespace != null && type.ImplementedInterfaces.Any((Type inter) => inter == typeof(TInterfaceType)) &&
                                     listOfRequiredImplementedInterfaceTypes.Intersect(type.ImplementedInterfaces).Count() == listOfRequiredImplementedInterfaceTypes.Count &&
                                     !type.IsInterface &&
                                     !type.Namespace.ToLower().EndsWith(".dummy") &&

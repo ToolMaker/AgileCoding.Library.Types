@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using AgileCoding.Extentions.Activators;
     using AgileCoding.Extentions.Loggers;
     using AgileCoding.Library.Interfaces.Logging;
@@ -20,7 +21,7 @@
             interfaceTypestoUse
                 .ForEach(delegate (Type typeDerivedFromInterface)
                 {
-                    TInterfaceType val;
+                    TInterfaceType? val;
                     try
                     {
                         val = typeDerivedFromInterface.CreateInstanceWithLogging<TInterfaceType>(logger, paramsList[typeDerivedFromInterface]);
@@ -29,15 +30,26 @@
                     {
                         throw new ArgumentException(string.Format("Tried to infoke type {0} and got a exception. This can cause because the call didnt contain all paramaters to satisfy the type {0}'s constructur defined. See innerexception for more details", typeDerivedFromInterface.GetType().Name, defaultConstructuorArgs), innerException);
                     }
-                    TEnumKey key = (TEnumKey)val.GetType().GetProperty(enumPropertyNameOnInterface).GetValue(val, null);
-                    if (!dictionaryContiantingEnumTypes.ContainsKey(key))
+                    if (val != null)
                     {
-                        dictionaryContiantingEnumTypes.Add(key, val);
+                        var propertyInfo = val.GetType().GetProperty(enumPropertyNameOnInterface);
+                        if (propertyInfo != null)
+                        {
+                            var objectValue = propertyInfo.GetValue(val, null);
+                            if (objectValue != null)
+                            {
+                                TEnumKey key = (TEnumKey)objectValue;
+                                if (!dictionaryContiantingEnumTypes.ContainsKey(key))
+                                {
+                                    dictionaryContiantingEnumTypes.Add(key, val);
+                                }
+                            }
+                        }
                     }
                 });
         }
 
-        internal static List<Type> PopulateInterfacesToUse<TInterfaceType>(List<Type> interfaceTypestoUse, List<Type> allImplementingInterfaceTypes = null)
+        internal static List<Type> PopulateInterfacesToUse<TInterfaceType>(List<Type> interfaceTypestoUse, List<Type>? allImplementingInterfaceTypes = null)
         {
             if (interfaceTypestoUse == null || interfaceTypestoUse.Count == 0)
             {
@@ -81,16 +93,24 @@
             }
         }
 
-        internal static Dictionary<Type, Object[]> PopulateDefaultConstructorParamDictionary(List<Type> interfaceTypestoUse, Func<string, object[]> defaultConstGenerationFunc = null, object[] defaultGlobalConstParams = null)
+        internal static Dictionary<Type, Object[]> PopulateDefaultConstructorParamDictionary(List<Type>? interfaceTypestoUse, Func<string, object[]>? defaultConstGenerationFunc = null, object[]? defaultGlobalConstParams = null)
         {
             Dictionary<Type, Object[]> paramsList = new Dictionary<Type, object[]>();
+            if(interfaceTypestoUse == null)
+            {
+                return paramsList;
+            }
+
             interfaceTypestoUse.ForEach((item) =>
             {
-                object[] paramsToUse = defaultConstGenerationFunc == null
+                object[]? paramsToUse = defaultConstGenerationFunc == null
                     ? defaultGlobalConstParams
                     : defaultConstGenerationFunc(item.Name);
 
-                paramsList.Add(item, paramsToUse);
+                if (paramsToUse != null)
+                {
+                    paramsList.Add(item, paramsToUse);
+                }
             });
 
             return paramsList;
@@ -100,7 +120,7 @@
             ILogger logger,
             string enumPropertyNameOnInterface,
             List<Type> interfaceTypes,
-            object[] defaultConstructuorsArgs,
+            object[]? defaultConstructuorsArgs,
             Dictionary<Type, object[]> paramsList,
             Dictionary<TEnumKey, Type> dictionaryContiantingEnumTypes)
         where TEnumKey : struct
@@ -111,7 +131,7 @@
             .ForEach(delegate (Type typeDerivedFromInterface)
             {
                 logger.WriteVerbose($"{nameof(GenerateDictionarOfTypes)} - Ready to create instance of type '{typeDerivedFromInterface.Name}'");
-                TInterfaceType val;
+                TInterfaceType? val;
                 try
                 {
                     val = typeDerivedFromInterface.CreateInstanceWithLogging<TInterfaceType>(logger, paramsList[typeDerivedFromInterface]);
@@ -123,15 +143,25 @@
                 }
 
                 logger.WriteVerbose($"{nameof(GenerateDictionarOfTypes)} - Getting Enum Value from property '{enumPropertyNameOnInterface}' on tpye '{typeDerivedFromInterface.Name}'");
-                TEnumKey key = (TEnumKey)val.GetType().GetProperty(enumPropertyNameOnInterface).GetValue(val, null);
-                if (!(dictionaryContiantingEnumTypes).ContainsKey(key))
+                if (val != null)
                 {
-                    logger.WriteVerbose($"{nameof(GenerateDictionarOfTypes)} - Enum Value not indictionary yet, updating cache dictionary");
-                    (dictionaryContiantingEnumTypes).Add(key, typeDerivedFromInterface);
-                }
-                else
-                {
-                    logger.WriteVerbose($"{nameof(GenerateDictionarOfTypes)} - Enum Value ALEARDY in indictionary, doing nothing");
+                    var propertyInfo = val.GetType().GetProperty(enumPropertyNameOnInterface);
+                    if (propertyInfo != null)
+                    {
+                        var objectValue = propertyInfo.GetValue(val, null);
+                        if (objectValue != null)
+                        {
+                            TEnumKey key = (TEnumKey)objectValue;
+                            if (!dictionaryContiantingEnumTypes.ContainsKey(key))
+                            {
+                                dictionaryContiantingEnumTypes.Add(key, typeDerivedFromInterface);
+                            }
+                            else
+                            {
+                                logger.WriteVerbose($"{nameof(GenerateDictionarOfTypes)} - Enum Value ALEARDY in indictionary, doing nothing");
+                            }
+                        }
+                    }
                 }
             });
         }

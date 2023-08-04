@@ -12,10 +12,10 @@ namespace AgileCoding.Library.Types
             ILogger logger,
             string enumPropertyNameOnInterface,
             List<Type> interfaceTypes,
-            Func<string, object[]> defaultConstFuncGeneratorFunc = null,
-            object[] defaultConstructuorsArgs = null) where TEnumKey : struct
+            Func<string, object[]>? defaultConstFuncGeneratorFunc = null,
+            object[]? defaultConstructuorsArgs = null) where TEnumKey : struct
         {
-            Dictionary<TEnumKey, Type> dictionaryContiantingEnumTypes = null;
+            Dictionary<TEnumKey, Type>? dictionaryContiantingEnumTypes = null;
 
             try
             {
@@ -34,9 +34,9 @@ namespace AgileCoding.Library.Types
                 logger.WriteVerbose($"Creating Dictionary of Types");
                 DictionaryOfTypeBase.GenerateDictionarOfTypes<TEnumKey, TInterfaceType>(logger, enumPropertyNameOnInterface, interfaceTypes, defaultConstructuorsArgs, paramsList, dictionaryContiantingEnumTypes);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
             return dictionaryContiantingEnumTypes;
         }
